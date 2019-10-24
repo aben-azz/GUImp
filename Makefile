@@ -6,85 +6,106 @@
 #    By: aben-azz <aben-azz@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/03 09:24:41 by aben-azz          #+#    #+#              #
-#    Updated: 2019/10/24 12:21:15 by aben-azz         ###   ########.fr        #
+#    Updated: 2019/10/24 14:52:52 by aben-azz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-_END			=	\x1b[0m
-_BOLD			=	\x1b[1m
-_UNDER			=	\x1b[4m
-_REV			=	\x1b[7m
-_GREY			=	\x1b[30m
-_RED			=	\x1b[31m
-_GREEN			=	\x1b[32m
-_YELLOW			=	\x1b[33m
-_BLUE			=	\x1b[34m
-_PURPLE			=	\x1b[35m
-_CYAN			=	\x1b[36m
-_WHITE			=	\x1b[37m
-_IGREY			=	\x1b[40m
-_IRED			=	\x1b[41m
-_IGREEN			=	\x1b[42m
-_IYELLOW		=	\x1b[43m
-_IBLUE			=	\x1b[44m
-_IPURPLE		=	\x1b[45m
-_ICYAN			=	\x1b[46m
-_IWHITE			=	\x1b[47m
-_MAGENTA		=	\x1b[35m
-
 NAME = GUImp
+lft_name = libft.a
+lui_name = libui.a
+sdl_tar_name = SDL2-2.0.8.tar.gz
 
-MSG				=	$(_BOLD)$(_BLUE)Compiling $(NAME):$(_END)
-.PHONY: all, $(NAME), clean, fclean, re
+lft_dir = ./libft/
+lui_dir = ./libui/
+src_dir = ./src/
+inc_dir = ./includes/
+lft_inc_dir = $(lft_dir)includes/
+lui_inc_dir = $(lui_dir)includes/
+sdl_dir = ./SDL2-2.0.8/
+sdl_inc_dir = $(sdl_dir)include
+sdl_lib_dir = $(sdl_dir)lib
+obj_dir = ./obj/
+
+sdl_link = `$(sdl_dir)sdl2-config --cflags --libs`
+
+lft_lib = $(lft_dir)$(lft_name)
+lui_lib = $(lui_dir)$(lui_name)
+
+HEADER_FILES = $(inc_dir)guimp.h
+LIBHEAD = $(lft_inc_dir)libft.h
+
+src_files = main.c
 
 
-cc = gcc
-FLAGS = -Wall -Wextra -Werror #-g -v #-fsanitize=address
-SRC_NAME = main.c
-OBJ_PATH = ./obj/
+#SRC = $(addprefix $(src_dir), $(src_files))
+#OBJ = $(addprefix $(obj_dir), $(src_files:.c=.o))
 
-LFT_PATH = ./libft/
-LFT_NAME = libft.a
-LUI_PATH = ./libui/
-LUI_NAME = libui.a
+CC = gcc
+CFLAGS = -Wall -Werror -Wextra -O3
+INC = -I $(inc_dir) -I $(lft_inc_dir) -I $(lui_inc_dir) -I $(sdl_inc_dir)
 
-INC_PATH = ./includes
-SRC_PATH = ./srcs/
-OBJ_NAME = $(SRC_NAME:.c=.o)
-INC_FPATH = ./includes/guimp.h
-SRC = $(addprefix $(SRC_PATH),$(SRC_NAME))
-LONGEST			=	$(shell echo $(notdir $(SRC)) | tr " " "\n" | awk ' { if (\
-				length > x ) { x = length; y = $$0 } }END{ print y }' | wc -c)
-OBJ = $(addprefix $(OBJ_PATH),$(OBJ_NAME))
-INC = $(addprefix -I,$(INC_PATH))
+C_RED = \033[31m
+C_GREEN = \033[32m
+C_CYAN = \033[36m
+C_NONE = \033[0m
 
-all: $(LFT_PATH)$(LFT_NAME) $(LUI_PATH)$(LUI_NAME) $(NAME)
+all: $(NAME)
 
-$(LFT_PATH)$(LFT_NAME):
-	@$(MAKE) -C $(LFT_PATH);
+$(NAME): $(sdl_dir) $(sdl_lib_dir) $(obj_dir) $(OBJ) $(LIBHEAD)
+	@make -C $(lft_dir)
+	@printf "RTv1:  %-25s$(C_GREEN)[done]$(C_NONE)\n" "libft.a"
+	@make -C $(lui_dir)
+	@printf "RTv1:  %-25s$(C_GREEN)[done]$(C_NONE)\n" "libvec.a"
+	@$(CC) $(OBJ) $(lft_lib) $(lui_lib) $(sdl_link) -o $(NAME)
+	@printf "RTv1:  %-25s$(C_GREEN)[done]$(C_NONE)\n" $@
 
-$(LUI_PATH)$(LUI_NAME):
-	@$(MAKE) -C $(LUI_PATH);
+$(lft_name):
+	@make -C $(lft_dir)
+	@printf "RTv1:  %-25s$(C_GREEN)[done]$(C_NONE)\n" $@
 
-$(NAME): $(LIBFT_PATH)$(LIBFT_NAME) $(LIBUI_PATH)$(LIBUI_NAME) $(OBJ)
-	@$(CC) $(FLAGS) -o $(NAME) -L $(LFT_PATH) -L $(LUI_PATH) -lft -lui $^ -o $@
-	@printf "\r\033[K$(_BOLD)$(_RED)./$(NAME) is ready for use\n$(_END)"
+$(lui_name):
+	@make -C $(lui_dir)
+	@printf "RTv1:  %-25s$(C_GREEN)[done]$(C_NONE)\n" $@
 
-$(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INC_FPATH)
-	@mkdir -p $(OBJ_PATH)
-	@$(CC) $(FLAGS) $(INC) -o $@ -c $<
-	@printf "\r\033[K$(MSG) $(_BOLD)$(_CYAN)%-$(LONGEST)s\$(_END)" $(notdir $<)
+$(sdl_dir):
+	@tar -xf $(sdl_tar_name)
+	@printf "RTv1:  %-25s$(C_CYAN)[extracted]$(C_NONE)\n" $@
+
+$(sdl_lib_dir):
+	@mkdir $(sdl_lib_dir)
+	@printf "\n$(C_CYAN)[configuring SDL]$(C_NONE)\n"
+	@cd $(sdl_dir); ./configure --prefix=`pwd`/lib >/dev/null
+	@printf "$(C_CYAN)[compiling SDL]$(C_NONE)\n"
+	@make -C $(sdl_dir) >/dev/null
+	@make -C $(sdl_dir) install >/dev/null
+	@printf "RTv1:  %-25s$(C_GREEN)[done]$(C_NONE)\n" $@
+
+$(obj_dir):
+	@mkdir $(obj_dir)
+	@printf "RTv1:  %-25s$(C_GREEN)[done]$(C_NONE)\n" $@
+
+$(obj_dir)%.o: $(src_dir)%.c $(HEADER_FILES)
+	@$(CC) $(CFLAGS) -c $(INC) $< -o $@
+	@printf "RTv1:  %-25s$(C_GREEN)[done]$(C_NONE)\n" $@
 
 clean:
-	@make -C $(LFT_PATH) clean
-	@make -C $(LUI_PATH) clean
-	@rm -rf $(OBJ_PATH)
-	@echo "$(_BOLD)$(_RED)Sucesfuly removed all objects from minishell$(_END)"
+	@rm -rf $(obj_dir)
+	@make -C $(lft_dir) clean
+	@make -C $(lui_dir) clean
+	@printf "RTv1:  %-25s$(C_RED)[done]$(C_NONE)\n" $@
 
 fclean: clean
-	@make -C $(LFT_PATH) fclean
-	@make -C $(LUI_PATH) fclean
-	@rm -f $(NAME)
-	@echo "$(_BOLD)$(_RED)Sucessfuly removed ${NAME} from minishell$(_END)"
+	@rm -rf $(NAME)
+	@rm -rf $(sdl_dir)
+	@make -C $(lft_dir) fclean
+	@make -C $(lui_dir) fclean
+	@printf "RTv1:  %-25s$(C_RED)[done]$(C_NONE)\n" $@
 
 re: fclean all
+
+norm: clean
+	@norminette $(src_dir) $(inc_dir)
+
+allnorm: norm
+	@norminette $(lft_dir)
+	@norminette $(lui_dir)
