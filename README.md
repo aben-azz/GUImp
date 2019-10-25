@@ -1,6 +1,6 @@
-#**GUImp Documentation**
-#Évenement
-##Window Event
+# **GUImp Documentation**
+# Évenement
+## Window Event
 **SDL_WINDOWEVENT_SHOWN** *Fenetre mise en avant plan*\
 **SDL_WINDOWEVENT_HIDDEN** *Fenetre mise en arriere plan*\
 **SDL_WINDOWEVENT_EXPOSED** *descriptif*\
@@ -15,42 +15,42 @@
 **SDL_WINDOWEVENT_FOCUS_GAINED** *Fenetre gagne le focus*\
 **SDL_WINDOWEVENT_FOCUS_LOST** *Fenetre perd le focus*\
 **SDL_WINDOWEVENT_CLOSE** *Fermeture de la fenetre*
-##Keyboard Event   
+## Keyboard Event   
 **SDL_KEYDOWN** *Appui d'une touche clavier*\
 **SDL_KEYUP** *Relachement d'une touche clavier*
-##TextInput Event
-###Events
+## TextInput Event
+### Events
 **SDL_TEXTINPUT** *Ajout d'un nouveau texte a la fin*
-###Functions
+### Functions
 **SDL_StartTextInput** *descriptif*\
 **SDL_StopTextInput** *descriptif*
-##TextEditing Event
-##Events
+## TextEditing Event
+## Events
 **SDL_TEXTEDITING** *Changement du texte*
-##Functions
+## Functions
 **SDL_StartTextInput** *descriptif*\
 **SDL_StopTextInput** *descriptif*\
-##MouseMotion Event
-##Events
+## MouseMotion Event
+## Events
 **SDL_MOUSEMOTION** *Mouvement de souris*
-##Functions
+## Functions
 **SDL_GetMouseState** *descriptif*\
 **SDL_GetRelativeMouseState** *descriptif*\
 **SDL_SetRelativeMouseMode** *descriptif*
-##MouseButton Event
-##Events
+## MouseButton Event
+## Events
 **SDL_MOUSEMOTION** *Mouvement de souris*
-##Functions
+## Functions
 **SDL_GetMouseState** *descriptif*\
 **SDL_GetRelativeMouseState** *descriptif*
-###DEFINE
+## #DEFINE
 **SDL_BUTTON_LEFT**\
 **SDL_BUTTON_MIDDLE**\
 **SDL_BUTTON_RIGHT**\
 **SDL_BUTTON_X1**\
 **SDL_BUTTON_X2**
-##MouseWheel Event
-###Events
+## MouseWheel Event
+### Events
 **SDL_MOUSEWHEEL**
 # Elements de la struc event et leurs types
     typedef struct event {
