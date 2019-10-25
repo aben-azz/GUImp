@@ -6,7 +6,7 @@
 #    By: aben-azz <aben-azz@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/03 09:24:41 by aben-azz          #+#    #+#              #
-#    Updated: 2019/10/24 14:52:52 by aben-azz         ###   ########.fr        #
+#    Updated: 2019/10/25 09:35:01 by aben-azz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ sdl_tar_name = SDL2-2.0.8.tar.gz
 
 lft_dir = ./libft/
 lui_dir = ./libui/
-src_dir = ./src/
+src_dir = ./srcs/
 inc_dir = ./includes/
 lft_inc_dir = $(lft_dir)includes/
 lui_inc_dir = $(lui_dir)includes/
@@ -37,8 +37,8 @@ LIBHEAD = $(lft_inc_dir)libft.h
 src_files = main.c
 
 
-#SRC = $(addprefix $(src_dir), $(src_files))
-#OBJ = $(addprefix $(obj_dir), $(src_files:.c=.o))
+SRC = $(addprefix $(src_dir), $(src_files))
+OBJ = $(addprefix $(obj_dir), $(src_files:.c=.o))
 
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra -O3
@@ -53,23 +53,23 @@ all: $(NAME)
 
 $(NAME): $(sdl_dir) $(sdl_lib_dir) $(obj_dir) $(OBJ) $(LIBHEAD)
 	@make -C $(lft_dir)
-	@printf "RTv1:  %-25s$(C_GREEN)[done]$(C_NONE)\n" "libft.a"
+	@printf "$(NAME):  %-25s$(C_GREEN)[done]$(C_NONE)\n" "libft.a"
 	@make -C $(lui_dir)
-	@printf "RTv1:  %-25s$(C_GREEN)[done]$(C_NONE)\n" "libvec.a"
+	@printf "$(NAME):  %-25s$(C_GREEN)[done]$(C_NONE)\n" "libvec.a"
 	@$(CC) $(OBJ) $(lft_lib) $(lui_lib) $(sdl_link) -o $(NAME)
-	@printf "RTv1:  %-25s$(C_GREEN)[done]$(C_NONE)\n" $@
+	@printf "$(NAME):  %-25s$(C_GREEN)[done]$(C_NONE)\n" $@
 
 $(lft_name):
 	@make -C $(lft_dir)
-	@printf "RTv1:  %-25s$(C_GREEN)[done]$(C_NONE)\n" $@
+	@printf "$(NAME):  %-25s$(C_GREEN)[done]$(C_NONE)\n" $@
 
 $(lui_name):
 	@make -C $(lui_dir)
-	@printf "RTv1:  %-25s$(C_GREEN)[done]$(C_NONE)\n" $@
+	@printf "$(NAME):  %-25s$(C_GREEN)[done]$(C_NONE)\n" $@
 
 $(sdl_dir):
 	@tar -xf $(sdl_tar_name)
-	@printf "RTv1:  %-25s$(C_CYAN)[extracted]$(C_NONE)\n" $@
+	@printf "$(NAME):  %-25s$(C_CYAN)[extracted]$(C_NONE)\n" $@
 
 $(sdl_lib_dir):
 	@mkdir $(sdl_lib_dir)
@@ -78,28 +78,28 @@ $(sdl_lib_dir):
 	@printf "$(C_CYAN)[compiling SDL]$(C_NONE)\n"
 	@make -C $(sdl_dir) >/dev/null
 	@make -C $(sdl_dir) install >/dev/null
-	@printf "RTv1:  %-25s$(C_GREEN)[done]$(C_NONE)\n" $@
+	@printf "$(NAME):  %-25s$(C_GREEN)[done]$(C_NONE)\n" $@
 
 $(obj_dir):
 	@mkdir $(obj_dir)
-	@printf "RTv1:  %-25s$(C_GREEN)[done]$(C_NONE)\n" $@
+	@printf "$(NAME):  %-25s$(C_GREEN)[done]$(C_NONE)\n" $@
 
 $(obj_dir)%.o: $(src_dir)%.c $(HEADER_FILES)
 	@$(CC) $(CFLAGS) -c $(INC) $< -o $@
-	@printf "RTv1:  %-25s$(C_GREEN)[done]$(C_NONE)\n" $@
+	@printf "$(NAME):  %-25s$(C_GREEN)[done]$(C_NONE)\n" $@
 
 clean:
 	@rm -rf $(obj_dir)
 	@make -C $(lft_dir) clean
 	@make -C $(lui_dir) clean
-	@printf "RTv1:  %-25s$(C_RED)[done]$(C_NONE)\n" $@
+	@printf "$(NAME):  %-25s$(C_RED)[done]$(C_NONE)\n" $@
 
 fclean: clean
 	@rm -rf $(NAME)
 	@rm -rf $(sdl_dir)
 	@make -C $(lft_dir) fclean
 	@make -C $(lui_dir) fclean
-	@printf "RTv1:  %-25s$(C_RED)[done]$(C_NONE)\n" $@
+	@printf "$(NAME):  %-25s$(C_RED)[done]$(C_NONE)\n" $@
 
 re: fclean all
 

@@ -5,64 +5,181 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: aben-azz <aben-azz@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/24 11:59:16 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/10/24 13:23:31 by aben-azz         ###   ########.fr       */
+/*   Created: 2019/10/25 09:38:44 by aben-azz          #+#    #+#             */
+/*   Updated: 2019/10/25 09:39:23 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "guimp.h"
+#include <stdio.h>
 
-int main()
+int	main(void)
 {
-    SDL_Window *window = NULL;
-    SDL_Renderer *renderer = NULL;
-    SDL_Texture *texture = NULL;
-    int statut = EXIT_FAILURE;
-    SDL_Rect rect = {100, 100, 100, 100}, dst = {0, 0, 0, 0};
-    SDL_Color rouge = {255, 0, 0, 255}, bleu = {0, 0, 255, 255};
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) != 0)
+	{
+		fprintf(stdout,"Échec de l'initialisation de la SDL (%s)\n",SDL_GetError());
+		return -1;
+	}
 
-    if(0 != SDL_Init(SDL_INIT_VIDEO))
-    {
-        fprintf(stderr, "Erreur SDL_Init : %s", SDL_GetError());
-        goto Quit;
-    }
-    if(0 != SDL_CreateWindowAndRenderer(640, 480, SDL_WINDOW_SHOWN, &window, &renderer))
-    {
-        fprintf(stderr, "Erreur SDL_CreateWindowAndRenderer : %s", SDL_GetError());
-        goto Quit;
-    }
-    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
-                                SDL_TEXTUREACCESS_TARGET, 200, 200);
-    if(NULL == texture)
-    {
-        fprintf(stderr, "Erreur SDL_CreateTexture : %s", SDL_GetError());
-        goto Quit;
-    }
+	{
+		/* Création de la fenêtre */
+		SDL_Window* pWindow = NULL;
+		pWindow = SDL_CreateWindow("Ma première application SDL2",SDL_WINDOWPOS_UNDEFINED,
+																  SDL_WINDOWPOS_UNDEFINED,
+																  640,
+																  480,
+																  SDL_WINDOW_SHOWN);
 
-    SDL_SetRenderTarget(renderer, texture);
-    /* La texture est la cible de rendu, maintenant, on dessine sur la texture. */
-    SDL_SetRenderDrawColor(renderer, bleu.r, bleu.g, bleu.b, bleu.a);
-    SDL_RenderClear(renderer);
-    SDL_SetRenderDrawColor(renderer, rouge.r, rouge.g, rouge.b, rouge.a);
-    SDL_RenderFillRect(renderer, &rect); /* On dessine un rectangle rouge sur la texture. */
+		if (pWindow)
+		{
+			char cont = 1; /* Détermine si on continue la boucle principale */
+			SDL_Event event;
+			SDL_Joystick* pJoy=NULL;
 
-    SDL_SetRenderTarget(renderer, NULL); /* Le renderer est la cible de rendu. */
+			SDL_JoystickEventState(SDL_ENABLE); // On indique que l'on souhaite utiliser le système d'événements pour les joysticks
 
-    /* On récupère les dimensions de la texture, on la copie sur le renderer
-       et on met à jour l’écran. */
-    SDL_QueryTexture(texture, NULL, NULL, &dst.w, &dst.h);
-    SDL_RenderCopy(renderer, texture, NULL, &dst);
-    SDL_RenderPresent(renderer);
-    statut = EXIT_SUCCESS;
-    SDL_Delay(3000);
+			while ( cont != 0 )
+			{
+				while ( SDL_PollEvent(&event) )
+				{
+					/* Traitement de l'événement */
+					switch (event.type) /* Quel événement avons-nous ? */
+					{
+						case SDL_KEYDOWN:
+							fprintf(stdout, "Un appuie sur une touche :\n");
+							fprintf(stdout, "\trépétition ? : %d\n",event.key.repeat);
+							fprintf(stdout, "\tscancode : %d\n",event.key.keysym.scancode);
+							fprintf(stdout, "\tkey : %d\n",event.key.keysym.sym);
+							if ( event.key.keysym.scancode == SDL_SCANCODE_ESCAPE )
+							{
+								cont = 0;
+							}
+							break;
+						case SDL_KEYUP:
+							fprintf(stdout, "Un relachement d'une touche :\n");
+							fprintf(stdout, "\trépétition ? : %d\n",event.key.repeat);
+							fprintf(stdout, "\tscancode : %d\n",event.key.keysym.scancode);
+							fprintf(stdout, "\tkey : %d\n",event.key.keysym.sym);
+							break;
 
-Quit:
-    if(NULL != texture)
-        SDL_DestroyTexture(texture);
-    if(NULL != renderer)
-        SDL_DestroyRenderer(renderer);
-    if(NULL != window)
-        SDL_DestroyWindow(window);
-    SDL_Quit();
-    return statut;
+						case SDL_MOUSEMOTION:
+							fprintf(stdout, "Un déplacement de la souris :\n");
+							fprintf(stdout, "\tfenêtre : %d\n",event.motion.windowID);
+							fprintf(stdout, "\tsouris : %d\n",event.motion.which);
+							fprintf(stdout, "\tposition : %d;%d\n",event.motion.x,event.motion.y);
+							fprintf(stdout, "\tdelta : %d;%d\n",event.motion.xrel,event.motion.yrel);
+							break;
+						case SDL_MOUSEBUTTONUP:
+							fprintf(stdout, "Un relachement d'un bouton de la souris :\n");
+							fprintf(stdout, "\tfenêtre : %d\n",event.button.windowID);
+							fprintf(stdout, "\tsouris : %d\n",event.button.which);
+							fprintf(stdout, "\tbouton : %d\n",event.button.button);
+	#if SDL_VERSION_ATLEAST(2,0,2)
+							fprintf(stdout, "\tclics : %d\n",event.button.clicks);
+	#endif
+							fprintf(stdout, "\tposition : %d;%d\n",event.button.x,event.button.y);
+							break;
+						case SDL_MOUSEBUTTONDOWN:
+							fprintf(stdout, "Un appuie sur un bouton de la souris :\n");
+							fprintf(stdout, "\tfenêtre : %d\n",event.button.windowID);
+							fprintf(stdout, "\tsouris : %d\n",event.button.which);
+							fprintf(stdout, "\tbouton : %d\n",event.button.button);
+	#if SDL_VERSION_ATLEAST(2,0,2)
+							fprintf(stdout, "\tclics : %d\n",event.button.clicks);
+	#endif
+							fprintf(stdout, "\tposition : %d;%d\n",event.button.x,event.button.y);
+							break;
+						case SDL_MOUSEWHEEL:
+							fprintf(stdout, "Roulette de la souris :\n");
+							fprintf(stdout, "\tfenêtre : %d\n",event.wheel.windowID);
+							fprintf(stdout, "\tsouris : %d\n",event.wheel.which);
+							fprintf(stdout, "\tposition : %d;%d\n",event.wheel.x,event.wheel.y);
+							break;
+
+						case SDL_JOYDEVICEADDED:
+							fprintf(stdout, "Connexion de joystick :\n");
+							fprintf(stdout, "\tjoystick : %d\n",event.jdevice.which);
+
+							if ( pJoy == NULL )
+							{
+								pJoy = SDL_JoystickOpen(event.jdevice.which);
+							}
+							else
+							{
+								fprintf(stdout,"Ce nouveau joystick ne sera pas ouvert (le programme ne gère qu'un joystick)\n");
+							}
+							break;
+						case SDL_JOYDEVICEREMOVED:
+							fprintf(stdout, "Déconnexion de joystick :\n");
+							fprintf(stdout, "\tjoystick : %d\n",event.jdevice.which);
+
+							if ( pJoy != NULL )
+							{
+								SDL_JoystickClose(pJoy);
+								pJoy = NULL;
+							}
+							break;
+						case SDL_JOYAXISMOTION:
+							fprintf(stdout, "Déplacement joystick :\n");
+							fprintf(stdout, "\tjoystick : %d\n",event.jaxis.which);
+							fprintf(stdout, "\taxe : %d\n",event.jaxis.axis);
+							fprintf(stdout, "\tvaleur : %d\n",event.jaxis.value);
+							break;
+						case SDL_JOYBUTTONDOWN:
+							fprintf(stdout, "Appui bouton joystick :\n");
+							fprintf(stdout, "\tjoystick : %d\n",event.jbutton.which);
+							fprintf(stdout, "\tbutton : %d\n",event.jbutton.button);
+							fprintf(stdout, "\tétat : %d\n",event.jbutton.state);
+							break;
+						case SDL_JOYBUTTONUP:
+							fprintf(stdout, "Relâchement bouton joystick :\n");
+							fprintf(stdout, "\tjoystick : %d\n",event.jbutton.which);
+							fprintf(stdout, "\tbutton : %d\n",event.jbutton.button);
+							fprintf(stdout, "\tétat : %d\n",event.jbutton.state);
+							break;
+						case SDL_JOYBALLMOTION:
+							fprintf(stdout, "Déplacement de trackball :\n");
+							fprintf(stdout, "\tjoystick : %d\n",event.jball.which);
+							fprintf(stdout, "\ttrackball : %d\n",event.jball.ball);
+							fprintf(stdout, "\tdéplacement : %d;%d\n",event.jball.xrel,event.jball.yrel);
+							break;
+						case SDL_JOYHATMOTION:
+							fprintf(stdout, "Déplacement de chapeau d'un joystick :\n");
+							fprintf(stdout, "\tjoystick : %d\n",event.jhat.which);
+							fprintf(stdout, "\tbutton : %d\n",event.jhat.hat);
+							fprintf(stdout, "\tvaleur : %d\n",event.jhat.value);
+							break;
+
+
+						case SDL_WINDOWEVENT:
+							fprintf(stdout, "Un événement de fenêtre, sur la fenêtre : %d\n",event.window.windowID);
+							// En théorie, ici, il faudrait faire un autre test ou switch pour chaque type de cet événement
+							break;
+						default:
+							fprintf(stdout, "Événement non traité : %d\n",event.type);
+					}
+
+					fprintf(stdout, "\n");
+				}
+
+				/* On a traité les événements, on peut continuer le jeu */
+			}
+
+			if ( pJoy != NULL )
+			{
+				SDL_JoystickClose(pJoy);
+				pJoy = NULL;
+			}
+
+			SDL_DestroyWindow(pWindow);
+		}
+		else
+		{
+			fprintf(stderr,"Erreur de création de la fenêtre: %s\n",SDL_GetError());
+		}
+	}
+
+	SDL_Quit();
+
+	return 0;
 }
