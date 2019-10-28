@@ -123,3 +123,24 @@
                Sint32 length: le nombre de caractere a editer a partir de start
             }
         }
+# Flags SDL_WindowFlags
+**SDL_WINDOW_FULLSCREEN** *fullscreen window*
+**SDL_WINDOW_FULLSCREEN_DESKTOP** *fullscreen window at the current desktop resolution*
+**SDL_WINDOW_OPENGL** *window usable with OpenGL context*
+**SDL_WINDOW_SHOWN** *window is visible*
+**SDL_WINDOW_HIDDEN** *window is not visible*
+**SDL_WINDOW_BORDERLESS** *no window decoration*
+**SDL_WINDOW_RESIZABLE** *window can be resized*
+**SDL_WINDOW_MINIMIZED** *window is minimized*
+**SDL_WINDOW_MAXIMIZED** *window is maximized*
+**SDL_WINDOW_INPUT_GRABBED** *window has grabbed input focus*
+**SDL_WINDOW_INPUT_FOCUS** *window has input focus*
+**SDL_WINDOW_MOUSE_FOCUS** *window has mouse focus*
+**SDL_WINDOW_FOREIGN** *window not created by SDL*
+**SDL_WINDOW_ALLOW_HIGHDPI** *window should be created in high-DPI mode if supported (>= SDL 2.0.1)*
+**SDL_WINDOW_MOUSE_CAPTURE** *window has mouse captured (unrelated to INPUT_GRABBED, >= SDL 2.0.4)*
+**SDL_WINDOW_ALWAYS_ON_TOP** *window should always be above others (X11 only, >= SDL 2.0.5)*
+**SDL_WINDOW_SKIP_TASKBAR** *window should not be added to the taskbar (X11 only, >= SDL 2.0.5)*
+**SDL_WINDOW_UTILITY** *window should be treated as a utility window (X11 only, >= SDL 2.0.5)*
+**SDL_WINDOW_TOOLTIP** *window should be treated as a tooltip (X11 only, >= SDL 2.0.5)*
+**SDL_WINDOW_POPUP_MENU** *window should be treated as a popup menu (X11 only, >= SDL 2.0.5)*

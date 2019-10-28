@@ -6,12 +6,12 @@
 #    By: aben-azz <aben-azz@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/10/09 12:43:35 by aben-azz          #+#    #+#              #
-#    Updated: 2019/10/24 12:20:27 by aben-azz         ###   ########.fr        #
+#    Updated: 2019/10/28 14:14:43 by aben-azz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libui.a
-SRC = ft_test.c
+SRC = ui_create_window.c
 
 _END			=	\x1b[0m
 _BOLD			=	\x1b[1m
