@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/25 09:38:44 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/10/25 09:39:23 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/10/28 13:30:26 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 int	main(void)
 {
+	ft_printf("ok\n");
+	
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) != 0)
 	{
 		fprintf(stdout,"Échec de l'initialisation de la SDL (%s)\n",SDL_GetError());
@@ -180,6 +182,5 @@ int	main(void)
 	}
 
 	SDL_Quit();
-
 	return 0;
 }
